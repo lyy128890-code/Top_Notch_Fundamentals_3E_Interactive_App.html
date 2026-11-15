@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Top Notch Fundamentals 3rd — دليلك التفاعلي</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Cairo:wght@400;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --accent:#0e4c5b; --accent-soft:#e7f0f2; --accent-line:#c7dde2;
+  --bg:#f7f9fa; --card:#ffffff; --ink:#16222a; --ink-2:#46575f; --ink-3:#8a9aa2;
+  --line:#e3ecee; --shadow:0 2px 8px rgba(0,0,0,.04); --shadow-h:0 10px 28px -12px rgba(14,76,91,.35);
+  --radius:16px; --mono:"JetBrains Mono",ui-monospace,monospace; --sans:"Outfit","Cairo",sans-serif;
+  --ar:"Cairo","Outfit",sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font-family:var(--ar);font-size:15px;line-height:1.7;-webkit-text-size-adjust:100%}
+.en{font-family:var(--sans);direction:ltr;unicode-bidi:isolate;display:inline-block}
+.pron{font-family:var(--ar);color:var(--accent);font-size:13.5px;font-weight:600}
+.ar{font-family:var(--ar)}
+.wrap{max-width:1120px;margin:0 auto;padding:0 20px}
+
+.hero{background:linear-gradient(180deg,#0e4c5b 0%,#12647a 100%);color:#fff;padding:34px 0 26px}
+.hero .brand{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:14px}
+.hero h1{margin:0;font-family:var(--sans);font-size:clamp(24px,4.6vw,38px);font-weight:700;letter-spacing:-.01em;line-height:1.2}
+.hero h1 small{display:block;font-family:var(--ar);font-size:14px;font-weight:600;color:#cfe6ec;margin-top:6px;letter-spacing:0}
+.badge-top{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.22);padding:7px 14px;border-radius:999px;font-size:12.5px;color:#eaf5f8}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:22px}
+.stat{background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.16);border-radius:14px;padding:11px 12px}
+.stat b{display:block;font-family:var(--sans);font-size:26px;font-weight:700;line-height:1.15}
+.stat span{font-size:12px;color:#cfe6ec}
+@media(max-width:640px){.stats{grid-template-columns:repeat(2,1fr)}.stat b{font-size:22px}}
+
+.controls{position:sticky;top:0;z-index:50;background:rgba(247,249,250,.93);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);padding:10px 0}
+.controls .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.search{flex:1 1 260px;position:relative;min-width:200px}
+.search input{width:100%;padding:10px 42px 10px 14px;border:1px solid var(--line);border-radius:12px;background:var(--card);font-family:var(--ar);font-size:14px;color:var(--ink);outline:none;transition:border-color .18s,box-shadow .18s}
+.search input:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.search svg{position:absolute;inset-inline-start:13px;top:50%;transform:translateY(-50%);color:var(--ink-3);pointer-events:none}
+select,.btn{font-family:var(--ar);font-size:13.5px;padding:9px 13px;border-radius:12px;border:1px solid var(--line);background:var(--card);color:var(--ink);cursor:pointer;transition:all .18s}
+select:hover,.btn:hover{border-color:var(--accent-line);background:#fff}
+.btn.icon{display:inline-flex;align-items:center;gap:7px}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+.btn.primary:hover{background:#0a3d4a;transform:translateY(-1px);box-shadow:var(--shadow-h)}
+.btn[aria-pressed="true"]{background:var(--accent-soft);border-color:var(--accent-line);color:var(--accent)}
+
+.tabs{display:flex;gap:6px;overflow-x:auto;padding:10px 0 2px;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tab{border:1px solid var(--line);background:var(--card);border-radius:999px;padding:8px 16px;font-size:13.5px;color:var(--ink-2);cursor:pointer;white-space:nowrap;font-family:var(--ar);transition:all .18s}
+.tab:hover{border-color:var(--accent-line);color:var(--accent)}
+.tab[aria-selected="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+
+main{padding:22px 0 70px}
+.view{display:none;animation:fade .22s ease}
+.view.active{display:block}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.section-head{display:flex;align-items:center;gap:10px;justify-content:space-between;flex-wrap:wrap;margin:4px 0 14px}
+.section-head h2{margin:0;font-size:17px;font-weight:700;display:flex;align-items:center;gap:9px}
+.section-head h2 svg{color:var(--accent)}
+.hint{font-size:12.5px;color:var(--ink-3)}
+
+.chips{display:flex;flex-wrap:wrap;gap:7px;margin:0 0 18px}
+.chip{border:1px solid var(--line);background:var(--card);border-radius:999px;padding:6px 13px;font-size:12.5px;color:var(--ink-2);cursor:pointer;font-family:var(--ar);transition:all .16s}
+.chip:hover{border-color:var(--accent-line)}
+.chip[aria-pressed="true"]{background:var(--accent-soft);border-color:var(--accent-line);color:var(--accent);font-weight:600}
+.chip i{font-style:normal;opacity:.6;font-size:11px;margin-inline-start:4px;font-family:var(--sans)}
+
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(255px,1fr));gap:12px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:14px 15px;display:flex;flex-direction:column;gap:7px;transition:transform .18s,box-shadow .18s,border-color .18s;position:relative}
+.card:hover{transform:translateY(-2px);box-shadow:var(--shadow-h);border-color:var(--accent-line)}
+.card .top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px}
+.word{font-family:var(--sans);font-size:18px;font-weight:600;direction:ltr;unicode-bidi:isolate;line-height:1.35;word-break:break-word}
+.word .art{font-size:12px;color:var(--ink-3);font-weight:500}
+.meaning{font-size:14px;color:var(--ink)}
+.meta{display:flex;flex-wrap:wrap;gap:6px;margin-top:auto}
+.tag{font-size:11px;color:var(--ink-3);background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:2px 8px}
+.tag.u{color:var(--accent);background:var(--accent-soft);border-color:var(--accent-line);font-family:var(--sans)}
+.speak{border:1px solid var(--accent-line);background:var(--accent-soft);color:var(--accent);border-radius:11px;width:34px;height:34px;flex:none;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;transition:all .16s}
+.speak:hover{background:var(--accent);color:#fff;transform:scale(1.06)}
+.speak:active{transform:scale(.96)}
+.speak.playing{background:var(--accent);color:#fff;animation:pulse 1s infinite}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(14,76,91,.35)}50%{box-shadow:0 0 0 7px rgba(14,76,91,0)}}
+.learned{position:absolute;inset-block-start:12px;inset-inline-end:12px;width:9px;height:9px;border-radius:50%;background:#3aa76d;display:none}
+.card.done .learned{display:block}
+.card.done{opacity:.62}
+.card .mark{border:none;background:none;color:var(--ink-3);cursor:pointer;font-size:11.5px;padding:0;align-self:flex-start}
+.card .mark:hover{color:var(--accent)}
+
+.rows{display:flex;flex-direction:column;gap:10px}
+.row-item{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:13px 15px;display:flex;gap:12px;align-items:flex-start}
+.row-item .num{font-family:var(--sans);font-size:12px;color:var(--ink-3);min-width:26px;padding-top:3px}
+.row-item .body{flex:1;min-width:0}
+.row-item .q{font-family:var(--sans);font-size:15.5px;font-weight:600;direction:ltr;unicode-bidi:isolate;text-align:left}
+.row-item .qa{font-size:13.5px;color:var(--ink-2);margin-top:3px}
+.ans{margin-top:8px;border-top:1px dashed var(--line);padding-top:8px;font-size:13px;color:var(--ink-2)}
+.ans b{color:var(--accent)}
+.ans .en{font-size:13.5px}
+.actions{display:flex;gap:6px;flex:none}
+.empty{padding:40px;text-align:center;color:var(--ink-3);background:var(--card);border:1px dashed var(--line);border-radius:var(--radius)}
+
+table{width:100%;border-collapse:collapse;background:var(--card);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden}
+th{background:var(--accent);color:#fff;font-size:13px;font-weight:600;text-align:start;padding:10px 12px;font-family:var(--ar)}
+td{padding:9px 12px;border-top:1px solid var(--line);font-size:13.5px;vertical-align:top}
+tr:nth-child(even) td{background:#fbfdfd}
+td.w{font-family:var(--sans);font-weight:600;direction:ltr;unicode-bidi:isolate;text-align:left;width:22%}
+
+.flashwrap{max-width:640px;margin:0 auto}
+.flash{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:34px 26px;text-align:center;box-shadow:var(--shadow);min-height:250px;display:flex;flex-direction:column;justify-content:center;gap:12px}
+.flash .w{font-family:var(--sans);font-size:38px;font-weight:700;direction:ltr;unicode-bidi:isolate}
+.flash .p{font-size:16px;color:var(--accent);font-weight:600}
+.flash .m{font-size:20px}
+.flash .reveal{color:var(--ink-3);font-size:14px}
+.flashbar{display:flex;gap:9px;justify-content:center;margin-top:16px;flex-wrap:wrap}
+.progress{height:7px;background:var(--line);border-radius:99px;overflow:hidden;margin:16px 0 6px}
+.progress i{display:block;height:100%;background:var(--accent);width:0;transition:width .3s}
+
+footer{border-top:1px solid var(--line);background:var(--card);padding:20px 0 34px;font-size:12.5px;color:var(--ink-3)}
+.toast{position:fixed;inset-block-end:22px;inset-inline-start:22px;background:var(--ink);color:#fff;padding:10px 16px;border-radius:12px;font-size:13px;opacity:0;pointer-events:none;transition:opacity .25s,transform .25s;z-index:99;transform:translateY(8px)}
+.toast.show{opacity:1;transform:none}
+@media(max-width:560px){
+  .hero{padding:24px 0 20px}
+  .grid{grid-template-columns:1fr 1fr;gap:9px}
+  .card{padding:11px 12px}
+  .word{font-size:15.5px}
+  .row-item{padding:11px 12px;gap:8px}
+  .row-item .q{font-size:14px}
+  .flash .w{font-size:30px}
+}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="brand">
+      <div>
+        <h1>Top Notch Fundamentals
+          <small>الطبعة الثالثة — دليلك التفاعلي: كل الكلمات • كل الأسئلة • كل الجمل — مع النطق الصوتي</small>
+        </h1>
+      </div>
+      <div class="badge-top">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 6v6l4 2"/><circle cx="12" cy="12" r="9"/></svg>
+        <span>مرجع سريع للوحدات 1–14</span>
+      </div>
+    </div>
+    <div class="stats" id="stats"></div>
+  </div>
+</header>
+
+<div class="controls">
+  <div class="wrap">
+    <div class="row">
+      <div class="search">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.2-3.2"/></svg>
+        <input id="q" type="search" placeholder="ابحث بالإنجليزية أو بالعربية…" autocomplete="off">
+      </div>
+      <select id="unitFilter" aria-label="تصفية حسب الوحدة"></select>
+      <select id="voiceSel" aria-label="اختيار الصوت"></select>
+      <select id="rateSel" aria-label="سرعة النطق">
+        <option value="0.6">بطيء جدًا</option>
+        <option value="0.75">بطيء</option>
+        <option value="0.9" selected>طبيعي</option>
+        <option value="1">سريع</option>
+      </select>
+      <button class="btn icon" id="stopBtn" title="إيقاف النطق">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="6" y="6" width="12" height="12" rx="2"/></svg>
+        إيقاف
+      </button>
+      <button class="btn icon" id="concealBtn" aria-pressed="false" title="إخفاء المعاني للتدريب">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M2 12s3.6-6 10-6 10 6 10 6-3.6 6-10 6-10-6-10-6Z"/><path d="m4 4 16 16"/></svg>
+        إخفاء المعاني
+      </button>
+    </div>
+    <div class="tabs" id="tabs" role="tablist"></div>
+  </div>
+</div>
+
+<main>
+  <div class="wrap">
+    <section class="view" id="v-words">
+      <div class="section-head">
+        <h2><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2Z"/></svg>
+          المفردات مقسّمة حسب نوع الكلمة</h2>
+        <div style="display:flex;gap:8px;align-items:center">
+          <span class="hint" id="wordsCount"></span>
+          <button class="btn icon" id="readAllBtn">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M11 5 6 9H2v6h4l5 4V5Z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M19 5a9 9 0 0 1 0 14"/></svg>
+            نطق القائمة
+          </button>
+        </div>
+      </div>
+      <div class="chips" id="catChips"></div>
+      <div id="wordSections"></div>
+    </section>
+
+    <section class="view" id="v-questions">
+      <div class="section-head">
+        <h2><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M9.2 9a2.9 2.9 0 1 1 3.8 2.8c-.7.3-1 .9-1 1.7v.3"/><path d="M12 17.2h.01"/></svg>
+          الأسئلة مع الإجابات النموذجية</h2>
+        <div style="display:flex;gap:8px;align-items:center">
+          <span class="hint" id="qCount"></span>
+          <button class="btn icon" id="readQBtn">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M11 5 6 9H2v6h4l5 4V5Z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/></svg>
+            نطق الأسئلة
+          </button>
+        </div>
+      </div>
+      <div class="rows" id="qList"></div>
+    </section>
+
+    <section class="view" id="v-sentences">
+      <div class="section-head">
+        <h2><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2Z"/></svg>
+          الجمل التدريبية</h2>
+        <div style="display:flex;gap:8px;align-items:center">
+          <span class="hint" id="sCount"></span>
+          <button class="btn icon" id="readSentBtn">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M11 5 6 9H2v6h4l5 4V5Z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/></svg>
+            نطق الكل
+          </button>
+        </div>
+      </div>
+      <div class="rows" id="sList"></div>
+    </section>
+
+    <section class="view" id="v-flash">
+      <div class="section-head">
+        <h2><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="6" width="13" height="13" rx="2"/><path d="M8 3h11a2 2 0 0 1 2 2v11"/></svg>
+          بطاقات المراجعة السريعة</h2>
+        <span class="hint">اضغط على البطاقة لعرض المعنى • استمع ثم خمّن</span>
+      </div>
+      <div class="flashwrap">
+        <div class="progress"><i id="flashProg"></i></div>
+        <div class="flash" id="flashCard" tabindex="0">
+          <div class="w en" id="flashW">—</div>
+          <div class="p" id="flashP"></div>
+          <div class="m ar" id="flashM" style="display:none"></div>
+          <div class="reveal" id="flashHint">اضغط البطاقة لإظهار المعنى</div>
+        </div>
+        <div class="flashbar">
+          <button class="btn icon" id="flashPrev">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m9 6 6 6-6 6"/></svg> السابق</button>
+          <button class="btn icon primary" id="flashSpeak">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M11 5 6 9H2v6h4l5 4V5Z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/></svg> استمع</button>
+          <button class="btn icon" id="flashNext">التالي
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m15 6-6 6 6 6"/></svg></button>
+          <button class="btn icon" id="flashShuffle">خلط</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="view" id="v-glossary">
+      <div class="section-head">
+        <h2><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2Z"/></svg>
+          المسرد الشامل (أبجدي)</h2>
+        <span class="hint" id="gCount"></span>
+      </div>
+      <div id="gTable"></div>
+    </section>
+  </div>
+</main>
+
+<footer><div class="wrap">
+  الدليل التفاعلي مُعدّ على أساس بنية كتاب <span class="en">Top Notch Fundamentals — Third Edition</span> (Pearson):
+  مفردات الوحدات الـ14 وأسئلتها وجملها مع الترجمة العربية. الشرح والأنشطة من إعداد هذا الدليل،
+  والكتاب الأصلي محفوظ لشركة <span class="en">Pearson Education</span> — استخدم نسختك الأصلية للاستماع والنطق.
+</div></footer>
+
+<div class="toast" id="toast"></div>
+
+<!-- ربط ملف البيانات الخارجي -->
+<script src="data.js"></script>
+
+<script>
+(function(){
+"use strict";
+const DATA = window.APP_DATA;
+const $ = s => document.querySelector(s);
+const $$ = s => Array.from(document.querySelectorAll(s));
+
+(function applyDataFixes(){
+  const WORD_FIX = {
+    'a dance': {pos:'noun'}, 'ate': {pron:'إيت'}, 'geography': {pron:'جيوغرافي'},
+    'grape': {pron:'غريپ'}, 'grapefruit': {pron:'غريْپفروت'}, 'too busy': {pos:'adjective'},
+    'too cold': {pos:'adjective'}, 'too expensive': {pos:'adjective'}, 'too full': {pos:'adjective'},
+    'too short': {pos:'adjective'}, 'too tired': {pos:'adjective'}, 'too young': {pos:'adjective'}
+  };
+  (DATA.words||[]).forEach(w=>{ if(WORD_FIX[w.en]) Object.assign(w, WORD_FIX[w.en]); });
+
+  const LETTER_NAMES = {G:'جي',I:'آي',L:'إل',M:'إم',N:'إن',O:'أو',P:'پي',Q:'كيو',R:'آر',S:'إس',T:'تي',U:'يو',W:'دبليو',Y:'واي'};
+  Object.keys(LETTER_NAMES).forEach(L=>{
+    if(!DATA.words.some(w=>w.en===L)) DATA.words.push({en:L,ar:'حرف '+LETTER_NAMES[L],pron:LETTER_NAMES[L],pos:'letter',topics:['The alphabet'],units:['1'],en_clean:L,article:''});
+  });
+
+  const NUMS = [['eleven','أحد عشر','إيلِڤِن'],['twelve','اثنا عشر','تْوِلف'],['thirteen','ثلاثة عشر','ثِرتين'],['fourteen','أربعة عشر','فورتين'],['fifteen','خمسة عشر','فِفتين'],['sixteen','ستة عشر','سِكستين'],['seventeen','سبعة عشر','سِڤِنتين'],['eighteen','ثمانية عشر','إيتين'],['nineteen','تسعة عشر','ناينتين']];
+  NUMS.forEach(([en,ar,pron])=>{
+    if(!DATA.words.some(w=>w.en===en)) DATA.words.push({en,ar,pron,pos:'number',topics:['Numbers 0-20'],units:['2'],en_clean:en,article:''});
+  });
+
+  (DATA.questions||[]).forEach(q=>{
+    if(q.id==='Unit 13-10') q.answer_ar = 'لأنني شبعان جدًا.';
+    if(q.id==='Unit 9-11')  q.answer_ar = 'سيذهبون إلى حفلة موسيقية.';
+    if(q.id==='Unit 5-3'){  q.answer_en = "It's at 3:30."; q.answer_ar = 'في الساعة الثالثة والنصف.'; }
+    if(q.id==='Unit 6-15')  q.en = 'What color are your new pants?';
+  });
+
+  if(DATA.meta && DATA.meta.stats){ DATA.meta.stats.words = DATA.words.length; DATA.meta.stats.function_words = DATA.function_words.length; }
+})();
+
+const TTS = (function(){
+  const synth = window.speechSynthesis;
+  let voices = [], voice = null, queue = [], playing = false;
+  function loadVoices(){
+    if(!synth) return;
+    voices = synth.getVoices() || [];
+    const sel = $('#voiceSel'); const prev = sel.value;
+    const en = voices.filter(v => /^en/i.test(v.lang||''));
+    const pref = en.filter(v => /US/i.test(v.lang));
+    sel.innerHTML = '';
+    if(!en.length){ sel.innerHTML = '<option value="">لا يوجد صوت إنجليزي على الجهاز</option>'; sel.disabled = true; return; }
+    sel.disabled = false;
+    const ranked = (pref.length?pref:en).concat(en.filter(v=>!pref.includes(v)));
+    ranked.forEach(v=>{ const o=document.createElement('option'); o.value=v.name; o.textContent=v.name+' ('+v.lang+')'; sel.appendChild(o); });
+    const keep = ranked.find(v=>v.name===prev) || ranked[0];
+    sel.value = keep.name; voice = keep;
+  }
+  if(synth){ loadVoices(); synth.addEventListener ? synth.addEventListener('voiceschanged', loadVoices) : (synth.onvoiceschanged = loadVoices); setTimeout(loadVoices, 350); setTimeout(loadVoices, 1200); }
+  $('#voiceSel').addEventListener('change', e=>{ voice = voices.find(v=>v.name===e.target.value) || null; });
+  function rate(){ return parseFloat($('#rateSel').value) || 0.9; }
+  function speak(text, btn){
+    if(!synth || !text) return; try{ synth.cancel(); }catch(e){}
+    const u = new SpeechSynthesisUtterance(String(text).replace(/\s+/g,' ').trim());
+    if(voice){ u.voice = voice; u.lang = voice.lang; } else { u.lang='en-US'; }
+    u.rate = rate(); u.pitch = 1; u.volume = 1;
+    if(btn){ btn.classList.add('playing'); }
+    u.onend = () => { if(btn) btn.classList.remove('playing'); }; u.onerror = () => { if(btn) btn.classList.remove('playing'); };
+    synth.speak(u);
+  }
+  function speakSeq(list, btn){
+    if(!synth || !list.length) return; try{ synth.cancel(); }catch(e){}
+    queue = list.slice(); playing = true; if(btn) btn.classList.add('playing');
+    const next = () => {
+      if(!playing || !queue.length){ playing=false; if(btn) btn.classList.remove('playing'); return; }
+      const t = queue.shift();
+      const u = new SpeechSynthesisUtterance(String(t).replace(/\s+/g,' ').trim());
+      if(voice){ u.voice = voice; u.lang = voice.lang; } else { u.lang='en-US'; }
+      u.rate = rate(); u.onend = next; u.onerror = next; synth.speak(u);
+    }; next();
+  }
+  function stop(){ playing=false; queue=[]; try{ synth && synth.cancel(); }catch(e){} $$('.speak.playing').forEach(b=>b.classList.remove('playing')); }
+  return { speak, speakSeq, stop, hasVoice: () => voices.some(v=>/^en/i.test(v.lang||'')) };
+})();
+
+const SPK = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H2v6h4l5 4V5Z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M19 5a9 9 0 0 1 0 14"/></svg>';
+
+function wordKey(w){ return (w.en_clean||w.en||'').toLowerCase().trim() + '|' + (w.pos||'').toLowerCase() + '|' + ((w.topics&&w.topics[0])||'').toLowerCase(); }
+function unitMatches(entryUnit, filterUnit){
+  if(filterUnit === 'all') return true;
+  return String(entryUnit||'').replace(/^Unit\s+/i, '').trim() === String(filterUnit).replace(/^Unit\s+/i, '').trim();
+}
+
+const SECTIONS = [{key:'noun',ar:'الأسماء'},{key:'verb',ar:'الأفعال'},{key:'verbphrase',ar:'عبارات فعلية'},{key:'adjective',ar:'الصفات'},{key:'adverb',ar:'ظروف الحال'},{key:'time',ar:'أوقات وتواريخ'},{key:'day',ar:'أيام الأسبوع'},{key:'month',ar:'أشهر السنة'},{key:'number',ar:'الأعداد'},{key:'letter',ar:'حروف الأبجدية'},{key:'article',ar:'أدوات التعريف'},{key:'pronoun',ar:'الضمائر'},{key:'preposition',ar:'حروف الجر'},{key:'conjunction',ar:'أدوات الربط'},{key:'auxiliary',ar:'الأفعال المساعدة'},{key:'proper',ar:'أسماء علم'},{key:'expression',ar:'تعبيرات وعبارات'},{key:'phrase',ar:'مواضع واتجاهات'}];
+const POS_AR = {}; SECTIONS.forEach(s => POS_AR[s.key] = s.ar);
+
+const state = { view:'words', cat:'all', query:'', unit:'all', conceal:false, learned: new Set(JSON.parse(localStorage.getItem('tn_learned')||'[]')), flash:[], flashIdx:0, flashRevealed:false };
+
+function icon(name){
+  const m = {words:'<path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2Z"/>',q:'<circle cx="12" cy="12" r="9"/><path d="M9.2 9a2.9 2.9 0 1 1 3.8 2.8c-.7.3-1 .9-1 1.7v.3"/><path d="M12 17.2h.01"/>',s:'<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2Z"/>',f:'<rect x="3" y="6" width="13" height="13" rx="2"/><path d="M8 3h11a2 2 0 0 1 2 2v11"/>',g:'<path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2Z"/>'};
+  return `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${m[name]}</svg>`;
+}
+function normAr(s){ return String(s||'').replace(/[\u064B-\u0652\u0670\u0640]/g,'').replace(/[\u0622\u0623\u0625]/g,'\u0627').replace(/\u0629/g,'\u0647').replace(/\u0649/g,'\u064A').toLowerCase(); }
+function esc(s){ return String(s==null?'':s).replace(/[&<>"]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+function toast(msg){ const t=$('#toast'); t.textContent=msg; t.classList.add('show'); clearTimeout(t._t); t._t=setTimeout(()=>t.classList.remove('show'),1900); }
+
+const TABS = [{key:'words',ar:'المفردات',icon:'words'},{key:'questions',ar:'الأسئلة',icon:'q'},{key:'sentences',ar:'الجمل',icon:'s'},{key:'flash',ar:'بطاقات',icon:'f'},{key:'glossary',ar:'المسرد',icon:'g'}];
+function buildTabs(){ $('#tabs').innerHTML = TABS.map(t=>`<button class="tab" role="tab" data-view="${t.key}" aria-selected="${t.key===state.view}">${icon(t.icon)} ${t.ar}</button>`).join(''); $$('#tabs .tab').forEach(b=>b.addEventListener('click', ()=>switchView(b.dataset.view))); }
+function switchView(v){ state.view=v; TTS.stop(); $$('#tabs .tab').forEach(b=>b.setAttribute('aria-selected', b.dataset.view===v)); $$('.view').forEach(s=>s.classList.toggle('active', s.id==='v-'+v)); window.scrollTo({top:0,behavior:'smooth'}); if(v==='flash') nextFlash(true); }
+
+function buildStats(){
+  const s = DATA.meta.stats;
+  $('#stats').innerHTML = `<div class="stat"><b>${s.words + s.function_words}</b><span>كلمة إنجليزية</span></div><div class="stat"><b>${s.questions}</b><span>سؤال مع إجابة</span></div><div class="stat"><b>${s.sentences}</b><span>جملة تدريبية</span></div><div class="stat"><b>14</b><span>وحدة + مراجعتان</span></div>`;
+  const uf = $('#unitFilter'); uf.innerHTML = '<option value="all">كل الوحدات</option>' + DATA.meta.units.map(u=>`<option value="${esc(u.label)}">${esc(u.label)} — ${esc(u.title_ar)}</option>`).join('');
+  uf.addEventListener('change', e=>{ state.unit = e.target.value; renderAll(); });
+}
+
+function allWords(){
+  const wordEnSet = new Set(DATA.words.map(w => (w.en_clean||w.en||'').toLowerCase().trim()));
+  const fw = DATA.function_words.filter(w => !wordEnSet.has((w.en||'').toLowerCase().trim())).map(w=>({ en:w.en, ar:w.ar, pron:w.pron, pos:w.cat, topics:[w.sub], units:['وظيفي'], en_clean:w.en, article:'' }));
+  return DATA.words.concat(fw);
+}
+function match(w, q){
+  if(!q) return true; const s=q.toLowerCase(), ns=normAr(q);
+  return (w.en||'').toLowerCase().includes(s) || normAr(w.ar).includes(ns) || normAr(w.pron).includes(ns) || (w.topics||[]).some(t=>t.toLowerCase().includes(s) || normAr(t).includes(ns));
+}
+function filteredWords(){ return allWords().filter(w=>{ if(state.cat!=='all' && w.pos!==state.cat) return false; if(state.unit!=='all' && !(w.units||[]).some(u => unitMatches(u, state.unit))) return false; return match(w, state.query); }); }
+
+function wordCard(w){
+  const key = wordKey(w); const done = state.learned.has(key);
+  const meaning = state.conceal ? '<span class="hint">اضغط «حفظها» لإظهار المعنى</span>' : esc(w.ar);
+  return `<div class="card ${done?'done':''}" data-w="${esc(key)}"><span class="learned"></span><div class="top"><div><div class="word en">${w.article?`<span class="art">${esc(w.article)}</span> `:''}${esc(w.en_clean||w.en)}</div><div class="pron">${esc(w.pron||'')}</div></div><button class="speak" data-say="${esc(w.en_clean||w.en)}" title="استمع">${SPK}</button></div><div class="meaning">${meaning}</div><div class="meta"><span class="tag u">${esc((w.units||[]).join(' • '))}</span><span class="tag">${esc(POS_AR[w.pos]||w.pos)}</span>${w.topics && w.topics[0] ? `<span class="tag">${esc(w.topics[0])}</span>`:''}</div><button class="mark" data-mark="${esc(key)}">${done?'✓ تم حفظها':'☆ حفظها'}</button></div>`;
+}
+function buildCatChips(){
+  const counts = {}; allWords().forEach(w=>counts[w.pos]=(counts[w.pos]||0)+1);
+  const chips = [{key:'all', ar:'الكل', n:allWords().length}].concat(SECTIONS.filter(s=>counts[s.key]).map(s=>({key:s.key, ar:s.ar, n:counts[s.key]})));
+  $('#catChips').innerHTML = chips.map(c=>`<button class="chip" data-cat="${c.key}" aria-pressed="${state.cat===c.key}">${esc(c.ar)} <i>${c.n}</i></button>`).join('');
+  $$('#catChips .chip').forEach(b=>b.addEventListener('click',()=>{ state.cat=b.dataset.cat; $$('#catChips .chip').forEach(x=>x.setAttribute('aria-pressed', x.dataset.cat===state.cat)); renderWords(); }));
+}
+let groupsCache = {};
+function renderWords(){
+  const list = filteredWords(); $('#wordsCount').textContent = list.length + ' كلمة';
+  const groups = {}; list.forEach(w=>{ (groups[w.pos] = groups[w.pos]||[]).push(w); }); groupsCache = groups;
+  const order = SECTIONS.map(s=>s.key).filter(k=>groups[k]);
+  const html = order.map(k=>{ const sec = SECTIONS.find(s=>s.key===k); return `<div style="margin-bottom:26px"><div class="section-head" style="margin-bottom:10px"><h2 style="font-size:15px">${esc(sec.ar)} <span class="hint">(${groups[k].length})</span></h2><button class="btn icon" data-read="${k}">${SPK} نطق القسم</button></div><div class="grid">${groups[k].map(wordCard).join('')}</div></div>`; }).join('');
+  $('#wordSections').innerHTML = html || '<div class="empty">لا توجد نتائج مطابقة.</div>'; wireCards();
+}
+function wireCards(){
+  $$('.speak').forEach(b=>b.addEventListener('click', e=>{ e.stopPropagation(); TTS.speak(b.dataset.say, b); }));
+  $$('[data-mark]').forEach(b=>b.addEventListener('click', e=>{ e.stopPropagation(); const k=b.dataset.mark; if(state.learned.has(k)) state.learned.delete(k); else state.learned.add(k); localStorage.setItem('tn_learned', JSON.stringify(Array.from(state.learned))); b.closest('.card').classList.toggle('done', state.learned.has(k)); b.textContent = state.learned.has(k) ? '✓ تم حفظها' : '☆ حفظها'; updateProgress(); }));
+  $$('[data-read]').forEach(b=>b.addEventListener('click', e=>{ e.stopPropagation(); const list = (groupsCache[b.dataset.read]||[]).map(w=>w.en_clean||w.en); TTS.speakSeq(list, b); }));
+}
+
+function renderQuestions(){
+  const list = DATA.questions.filter(q=>{ if(state.unit!=='all' && !unitMatches(q.unit, state.unit)) return false; if(!state.query) return true; const s=state.query.toLowerCase(), ns=normAr(state.query); return q.en.toLowerCase().includes(s) || normAr(q.ar).includes(ns) || normAr(q.answer_ar||'').includes(ns) || (q.answer_en||'').toLowerCase().includes(s); });
+  $('#qCount').textContent = list.length + ' سؤال';
+  $('#qList').innerHTML = list.length ? list.map((q,i)=>`<div class="row-item"><div class="num">${i+1}</div><div class="body"><div class="q">${esc(q.en)}</div><div class="qa ar">${esc(q.ar)}</div><div class="ans" hidden><b>الإجابة النموذجية:</b> <span class="en">${esc(q.answer_en)}</span>${q.answer_ar?` — <span class="ar">${esc(q.answer_ar)}</span>`:''}<button class="speak" style="width:26px;height:26px;margin-inline-start:6px;vertical-align:middle" data-say="${esc(q.answer_en)}" title="استمع للإجابة">${SPK}</button></div><div class="meta"><span class="tag u">${esc(q.unit)}</span><span class="tag">${esc(q.unit_ar)}</span><button class="btn" style="padding:3px 10px;font-size:12px" data-ans>إظهار الإجابة</button></div></div><div class="actions"><button class="speak" data-say="${esc(q.en)}" title="استمع للسؤال">${SPK}</button></div></div>`).join('') : '<div class="empty">لا توجد نتائج.</div>';
+  $$('[data-ans]').forEach(b=>b.addEventListener('click', ()=>{ const ans=b.closest('.body').querySelector('.ans'); const open=!ans.hidden; ans.hidden=open; b.textContent = open?'إظهار الإجابة':'إخفاء الإجابة'; }));
+  $$('#qList .speak').forEach(b=>b.addEventListener('click', ()=>TTS.speak(b.dataset.say, b)));
+}
+
+function renderSentences(){
+  const list = DATA.sentences.filter(s=>{ if(state.unit!=='all' && !unitMatches(s.unit, state.unit)) return false; if(!state.query) return true; const q=state.query.toLowerCase(), nq=normAr(state.query); return s.en.toLowerCase().includes(q) || normAr(s.ar).includes(nq); });
+  $('#sCount').textContent = list.length + ' جملة';
+  $('#sList').innerHTML = list.length ? list.map((s,i)=>`<div class="row-item"><div class="num">${i+1}</div><div class="body"><div class="q">${esc(s.en)}</div><div class="qa ar">${esc(s.ar)}</div><div class="meta"><span class="tag u">${esc(s.unit)}</span><span class="tag">${esc(s.unit_ar)}</span></div></div><div class="actions"><button class="speak" data-say="${esc(s.en)}" title="استمع">${SPK}</button></div></div>`).join('') : '<div class="empty">لا توجد نتائج.</div>';
+  $$('#sList .speak').forEach(b=>b.addEventListener('click', ()=>TTS.speak(b.dataset.say, b)));
+}
+
+function renderGlossary(){
+  const list = allWords().filter(w=>match(w, state.query)); $('#gCount').textContent = list.length + ' مدخل';
+  const rows = list.slice().sort((a,b)=>(a.en_clean||a.en).localeCompare(b.en_clean||b.en,'en')).map(w=>`<tr><td class="w en">${esc(w.en_clean||w.en)}</td><td class="pron">${esc(w.pron||'')}</td><td class="ar">${esc(w.ar)}</td><td><span class="tag">${esc(POS_AR[w.pos]||w.pos)}</span></td></tr>`).join('');
+  $('#gTable').innerHTML = `<table><thead><tr><th>الكلمة</th><th>النطق</th><th>المعنى بالعربية</th><th>النوع</th></tr></thead><tbody>${rows}</tbody></table>`;
+}
+
+function buildFlashPool(){ const pool = filteredWords().filter(w=>(w.en_clean||w.en).length<40); state.flash = pool.slice().sort(()=>Math.random()-0.5); state.flashIdx = 0; state.flashRevealed=false; if(!pool.length){ toast('لا توجد بطاقات ضمن الفلتر الحالي'); } }
+function showFlash(){ const w = state.flash[state.flashIdx]; if(!w){ $('#flashW').textContent='—'; $('#flashM').style.display='none'; $('#flashP').textContent=''; return; } $('#flashW').textContent = w.en_clean||w.en; $('#flashP').textContent = w.pron||''; $('#flashM').textContent = w.ar; $('#flashM').style.display = state.flashRevealed?'block':'none'; $('#flashHint').textContent = state.flashRevealed?'':'اضغط البطاقة لإظهار المعنى'; $('#flashProg').style.width = state.flash.length? ((state.flashIdx+1)/state.flash.length*100)+'%':'0%'; }
+function nextFlash(reset){ if(reset || !state.flash.length) buildFlashPool(); state.flashRevealed=false; state.flashIdx = (state.flashIdx+1) % Math.max(state.flash.length,1); showFlash(); }
+
+function renderAll(){ renderWords(); renderQuestions(); renderSentences(); renderGlossary(); updateProgress(); }
+function updateProgress(){ const total = allWords().length; const done = state.learned.size; let t = $('#progressNote'); if(!t){ t=document.createElement('span'); t.id='progressNote'; t.className='hint'; $('#catChips').parentNode.insertBefore(t, $('#catChips').nextSibling); } t.textContent = `حفظت ${done} من ${total} كلمة`; }
+
+function boot(){
+  const oldKeys = Array.from(state.learned).filter(k => !k.includes('|')); if(oldKeys.length){ oldKeys.forEach(k => state.learned.delete(k)); localStorage.setItem('tn_learned', JSON.stringify(Array.from(state.learned))); }
+  buildTabs(); buildStats(); buildCatChips(); renderAll();
+  let t=null; $('#q').addEventListener('input', e=>{ clearTimeout(t); t=setTimeout(()=>{ state.query=e.target.value.trim(); renderAll(); }, 180); });
+  $('#stopBtn').addEventListener('click', ()=>{ TTS.stop(); toast('تم إيقاف النطق'); });
+  $('#concealBtn').addEventListener('click', e=>{ state.conceal=!state.conceal; e.currentTarget.setAttribute('aria-pressed', String(state.conceal)); toast(state.conceal?'وضع الإخفاء: المعاني مخفية':'وضع الإظهار الكامل'); renderWords(); });
+  $('#readAllBtn').addEventListener('click', e=>{ TTS.speakSeq(filteredWords().map(w=>w.en_clean||w.en), e.currentTarget); });
+  $('#readQBtn').addEventListener('click', e=>{ TTS.speakSeq(DATA.questions.filter(q=>state.unit==='all'||unitMatches(q.unit, state.unit)).map(q=>q.en), e.currentTarget); });
+  $('#readSentBtn').addEventListener('click', e=>{ TTS.speakSeq(DATA.sentences.filter(s=>state.unit==='all'||unitMatches(s.unit, state.unit)).map(s=>s.en), e.currentTarget); });
+  $('#flashCard').addEventListener('click', ()=>{ state.flashRevealed=true; showFlash(); });
+  $('#flashNext').addEventListener('click', ()=>nextFlash());
+  $('#flashPrev').addEventListener('click', ()=>{ state.flashIdx=(state.flashIdx-1+Math.max(state.flash.length,1))%Math.max(state.flash.length,1); state.flashRevealed=true; showFlash(); });
+  $('#flashShuffle').addEventListener('click', ()=>{ state.flash = state.flash.slice().sort(()=>Math.random()-0.5); state.flashIdx=0; state.flashRevealed=false; showFlash(); });
+  $('#flashSpeak').addEventListener('click', ()=>{ const w=state.flash[state.flashIdx]; if(w) TTS.speak(w.en_clean||w.en); });
+  document.addEventListener('keydown', e=>{ if(e.code==='Space' && state.view==='flash' && e.target===document.body){ e.preventDefault(); state.flashRevealed=!state.flashRevealed; showFlash(); } });
+  if(!TTS.hasVoice()){ setTimeout(()=>toast('لا يوجد صوت إنجليزي مثبَّت على الجهاز'), 900); }
+}
+document.addEventListener('DOMContentLoaded', ()=>{ boot(); switchView('words'); });
+})();
+</script>
+</body>
+</html>
